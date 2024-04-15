@@ -4,15 +4,18 @@
 
 // initialzer with basic values
 // creates a char array with 20 memory
+
+
 JCString::JCString() {
 	this->cap = 20; //size of memory
 	this->end = 0;//index of the end of the string
 	this->str = new char[cap]; // creates the an array of size 20 chars
 	this->str[end] = '\0'; // terminates the char array
 }
+
 // construntor for dumping arrays
 JCString::JCString(const char* cstr) {
-	//end starts at zero always
+	//while loop counts chars and stores int 
 	while (cstr[this->end] != '\0')
 	{
 		++this->end;
@@ -50,7 +53,7 @@ char JCString::at(int index) {
 //for reading streams??
 bool JCString::read(istream& inputStrm) {
 	char inputWord[ 100 ];
-	if (inputStrm >> inputWord) {
+	if (inputStrm >> inputWord) { // reads in the word with the extractor ">>" 
 		for (this->end = 0; inputWord[this->end] != '\0'; ++(this->end));  			//empty loop
 
 		// cap = ??;						//TODO: needs to potentially grow for prog3
@@ -100,20 +103,19 @@ int JCString::JCScompareTo(const JCString& angStr)
 		int len = 0;
 		int count = 0;
 		int result = 0;
-		// dumie char stirngs
-		JCString str1(this->str);
+		// dummie char stirngs
+		JCString thisString(this->str);
 
-		// lower case things
-		str1.makeLower();
-		JCString str2 = angStr.returnLower();
+		// lower case things for when we implement that later
+		// uncomment when ready
+		//JCString str2 = angStr.returnLower();
+		//str1.makeLower();
 
-
-		
-
-		// make sure we iter through to the longest char string
-		if (str1.length() > str2.length())
+		JCString str2(angStr.str);
+		// make sure we iter through to the shortest char string
+		if (thisString.length() < str2.length())
 		{
-			len = str1.length();
+			len = thisString.length();
 		}
 		else
 		{
@@ -123,17 +125,35 @@ int JCString::JCScompareTo(const JCString& angStr)
 
 		while (count < len)
 		{
-			if (str1.str[count] > str2.str[count])
+			// if the char arr is shorter than the other but equal otherwise
+			// the shorter one wins by defult
+			// makes sure we don't go out of bounds
+			if(thisString.str[count] > str2.str[count])
 			{
+				//str1 is greater or comes later return 1
 				result = 1;
 				count = len; // effectivly breaks
+
 			}
-			else if (str1.str[count] < str2.str[count])
+			else if (thisString.str[count] < str2.str[count])
 			{
 				result = -1;
+				//str2 is greater or comes later return 1
 				count = len; // effectivly breaks
+			}//then they must be the same char , if one is terminated here it comes first (is smaller)
+			else if (thisString.str[count+1] == '\0')
+			{
+				result = -1;//compare string is larger comes later in alpha
+				count = len;
+				
 			}
-			count++;
+			else if (str2.str[count+1] == '\0')
+			{
+				result = 1; //this string is larger, compare string comes first 
+				count = len;
+			}// if not done continue comparing char for char
+
+			count++;//move to the next char
 		}
 		return result;//return 0 if equal
 }
@@ -147,17 +167,11 @@ void JCString::setEqualTo(const JCString& argStr) {
 		this->str[i] = argStr.str[i];
 	}
 }
-void JCString::print()
-{
-	for (int index = 0; index < this->end; index++)
-	{
-		std::cout << this->str[index];
-	}
-}
 const char* JCString::c_str() {
 	return this->str;
 }
 
+//  modifies the JCString such that it is all lower case
 void JCString::makeLower()
 {
 	for (int i = 0; i <= this->end; i++)
@@ -168,6 +182,7 @@ void JCString::makeLower()
 		}
 	}
 }
+// returns an instance of the JCString that is lower case
 JCString JCString::returnLower() const
 {
 	JCString returnString(this->str);

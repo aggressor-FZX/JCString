@@ -36,7 +36,6 @@ public:
 
 	JCString returnLower() const;
 	void makeLower();
-	void print();
 
 private:
 	char* str; // the array it is based off called str;
