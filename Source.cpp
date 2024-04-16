@@ -20,8 +20,8 @@
 #include <iomanip>
 #include "JCString.h"
 #include <iostream>
-
 using namespace std;
+
 // GLOBAL VARIABLES
 char INPUT_FILE[] = "infile2.txt";
 char OUTPUT_FILE[] = "outfile3.txt";
@@ -32,21 +32,22 @@ void saveToFIle(const vector<JCString>& wordVec, char* fileName, int wordPerLin)
 
 int main()
 { 
-	vector<JCString> words(100);        // calls default constructor 100 times
-	ifstream fin(INPUT_FILE);
+	vector<JCString> words(100);
+	ifstream fin(INPUT_FILE);			
 
-	// READ
+	// READ FILE
 	if (fin.fail()) {
-		system("pause");
+		cout << "ERROR READING FILE";
 		exit(1);
 	}
 
+	// Loop reads in each words into JCString object iters thru jcstring vector
 	int wordCnt = 0;
 	for (wordCnt; words[wordCnt].read(fin); ++wordCnt) {       // empty loop
 	}
 
 	words.resize(wordCnt);            //shrink vector to size used
-	fin.close();
+	fin.close();//done with the file
 	
 	// SORT
 	vector<JCString> sortedVec = vectorSort(words);
@@ -58,7 +59,8 @@ int main()
 	return 0;
 
 }
-	
+
+// A bubble sort variant uses JCString comparison method "lessThan"	
 vector<JCString> vectorSort(const vector<JCString> &wordVec)
 {
 	bool notDone;
@@ -71,13 +73,15 @@ vector<JCString> vectorSort(const vector<JCString> &wordVec)
 		{
 
 
-
 			//if the next one is less than it comes backwards
-			if (!sortedVec.at(i).lessThan(sortedVec.at(i+1)))// will automaticaly check the last elem
-			{
+			if (!sortedVec.at(i).lessThan(sortedVec.at(i+1)))// i+1, will automaticaly check the last elem
+			{	
+
+				//swap the values
 				JCString holder = sortedVec.at(i);
 				sortedVec.at(i) = sortedVec.at(i + 1);
 				sortedVec.at(i + 1) = holder;
+
 				notDone = true; 
 			}
 		}
@@ -93,25 +97,26 @@ void saveToFIle(const vector<JCString> &wordVec, char* fileName, int wordPerLin)
 	ofstream outfile(fileName, ios::out); 
 	if (!outfile)
 	{
-		cout << "ERROR READING FILE!!" << endl;
+		cout << "ERROR READING FILE" << endl;
 	}
 
 	int line = 0;
 
-	// left aligning and spacing
-	outfile << left;
-	outfile << setw(13);
-
-	//writing out
 	for (JCString str : wordVec)
 	{
+		// left aligning and spaced 
+		outfile << left;
+		outfile << setw(13);
+
 		str.write(outfile);
+		
 		line++;
-		if (line % wordPerLin == 0)// 6 words per line
+
+		// words per line before carriage return 
+		if (line % wordPerLin == 0)
 		{
 			outfile << endl;
 		}
-
 	}
 
 	outfile.close();

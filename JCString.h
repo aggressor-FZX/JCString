@@ -1,15 +1,16 @@
 ////
 // Name: Jeff Calderon
-// Section: 
-// Class Name: JCString
-//
-// Description: HEADER FILE Just the Declerations and stuff
-//  class do (not how it does it: for example, it uses loops)?  Blah
-//  blah blah blah blah, blah blah blah blah blah blah blah blah!
+// Class Name: CS131
+// Section:  33616
+// Program JCStrig 
+// Description: HEADER FILE  Declerations 
+// Shows memeber functions of the JCString class 
+// Shows user how to use constructors and methods
+// 
 ////
 
-#ifndef MYSTRING_H
-#define MYSTRING_H
+#ifndef JCSTRING_H
+#define JCSTRING_H
 
 #include <istream>
 
@@ -27,15 +28,16 @@ public:
 	bool read(istream& inputStrm);
 	void write(ostream& outputStrm);
 
+	// Comparitor functions for use with like objects
 	bool lessThan(const JCString& argStr);
 	bool greaterThan(const JCString& argStr);
 	bool equals(const JCString& argStr);
-	
+
 	void setEqualTo(const JCString& argStr);
 	const char* c_str();
 
-	JCString returnLower() const;
-	void makeLower();
+	JCString returnLower() const; // returns a JCString copy in lowercase
+	void makeLower(); // The JCString becomes all lowercase 
 
 private:
 	char* str; // the array it is based off called str;
