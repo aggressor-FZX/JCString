@@ -127,11 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="JCString.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClInclude Include="JCString.h" />
+    <ClInclude Include="JCStringV2.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JCString.h" />
+    <ClCompile Include="JCStringV2.cpp" />
+    <ClCompile Include="main_V2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
