@@ -27,9 +27,8 @@ JCString::JCString()
 {
 	this->cap = 7; //size of memory
 	this->end = 0;//index of the end of the string
-	this->str = new char[cap]; // reserves memomory for 7 chars
+	this->str = new char[this->cap]; // reserves memomory for 7 chars
 	this->charInitialize(this->cap);
-	this->str[end] = '\0'; // terminates the char array at 0
 
 	//keeping track of objects	
 	this->str_num = createdCount;
@@ -50,12 +49,13 @@ JCString::~JCString()
 		cout << "deleted this string " << this->str << endl;
 		cout << "ID " << this->str_num << endl;
 
-		//keeping track of objects	
-		--currentCount;
 		if (currentCount < 0) { cout << "less than zero current"; }
 		// Be free memory
 		delete[] this->str;
 		this->str = nullptr;
+
+		//keeping track of objects	
+		--currentCount;
 	}
 	else {
 		cout << "double delete \n";
@@ -66,21 +66,25 @@ JCString::~JCString()
 JCString::JCString(const char* cstr) 
 {	
 	//while loop counts chars and stores int 
+	this->cap = 7; //size of memory
+	this->end = 0;//index of the end of the string
+	this->str = new char[this->cap]; // reserves memomory for 7 chars
+	this->charInitialize(this->cap);
+	this->str[end] = '\0'; // terminates the char array at 0
+	//count dumped array elements
 	for (this->end = 0; cstr[this->end] != '\0'; ++this->end);
 		
-	if (this->cap+1 > this->end) 	//increases the cap
+	//if its larger than default size delete old pointer, make new larger one
+	if (this->cap < this->end) 	
 	{
-
+		this->cap = this->end + 2;
 		delete[] this->str;
-		this->cap = this->end + 7;
-		
-		
+		//new larger array
+		this->str = new char[this->cap];
 	}
 
 	std::cout << "dump array cap " << this->cap << " word: " << cstr << endl;
 	
-	this->str = new char[this->cap]; // creates char arr a holding array
-	this->charInitialize(this->cap);
 
 	// fills a char array stores in the variable
 	for (int i = 0; i < this->end; ++i) {
@@ -88,10 +92,13 @@ JCString::JCString(const char* cstr)
 	}
 	this->str[end] != '\0';
 
+
 	//keeping track of objects	
 	this->str_num = createdCount;
 	++createdCount;
 	++currentCount;
+	cout << "dump array string " << this->str << endl;
+	cout << "ID " << this->str_num << endl;
 
 }
 // Copy constructor another JCString
@@ -100,13 +107,14 @@ JCString::JCString(const JCString& jcstr)
 	this->cap = 7;
 	this->end = 0;
 	//index of the end of the string
+
 	std::cout << "copy constructor cap " << this->cap << " word: ";
 
 	for (int i = 0; i < jcstr.length(); i++)
 	{
 		cout << jcstr[i];
 	}
-	std::cout << endl;
+	std::cout << "\n size " << jcstr.length() << endl; ;
 
 	for (this->end = 0; jcstr.str[this->end] != '\0'; ++this->end) 
 	{
@@ -116,7 +124,7 @@ JCString::JCString(const JCString& jcstr)
 	{
 		std::cout << jcstr.str << " is big\n";
 		std::cout << " the cap is " << this->cap << endl;
-		this->cap = this->end + 7;
+		this->cap = jcstr.length()  + 2;
 		std::cout << "now the cap is " << this->cap << endl;
 		std::cout << "end is " << this->end << endl;
 		
@@ -176,8 +184,11 @@ istream& JCString::operator>>(istream& inputStrm)
 	char inputWord[ 100 ];
 	if (inputStrm >> inputWord) {  
 		for (this->end = 0; inputWord[this->end] != '\0'; ++(this->end));//Loop counts letters finds end
-		this->cap = this->end + 20;						
-		
+		JCString CopiedStr(inputWord);//let the copy constructor reasize;
+
+		//now copy into existing object
+		*this = CopiedStr;
+
 		for (int i = 0; i <= this->end; ++i) 
 		{
 			this->str[i] = inputWord[i];
@@ -304,7 +315,7 @@ JCString& JCString::operator=(const JCString& strToCopy)
 	{ 
 		delete[] this->str;
 		this->end = strToCopy.end;
-		this->cap = this->end + 7;
+		this->cap = this->end + 2;
 		this->str = new char[this->cap];
 		this->charInitialize(this->cap);
 
