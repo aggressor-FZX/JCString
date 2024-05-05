@@ -23,12 +23,16 @@
 using namespace std;
 
 // GLOBAL VARIABLES
-char INPUT_FILE[] = "infile2.txt";
-char OUTPUT_FILE[] = "outfile3.txt";
+const char INPUT_FILE[] = "infileTest.txt";
+const char OUTPUT_FILE[] = "outfile5.txt";
+
 
 // Function prototypes 
 vector<JCString> vectorSort(const vector<JCString>& wordVec);
-void saveToFIle(const vector<JCString>& wordVec, char* fileName, int wordPerLin);
+void saveToFIle(const vector<JCString>& wordVec, const char* fileName, int wordPerLin);
+
+void jcprint(JCString& jcstr);
+void printJCstrVector(const vector<JCString>& wordvec);
 
 int main()
 { 
@@ -43,36 +47,39 @@ int main()
 
 	// Loop reads in each words into JCString object iters thru jcstring vector
 	int wordCnt = 0;
-	for (wordCnt; words[wordCnt] >> fin; ++wordCnt) {       // empty loop
+	for (wordCnt; words[wordCnt] >> fin; ++wordCnt) 
+	{
+		// empty loop
 	}
 	
 	//TESTING
 	words.at(1) << cout << " vs " ;
 	words.at(2) << cout << endl;
-	
+	//cout << words.at(1);
 	bool result = true;
-	result = (words.at(1) == words.at(2));
-	cout << "result = (words.at(1) == words.at(2))" << endl;
-	cout << "result is " << result << endl;
-
-	result = (words.at(1) < words.at(2));
-	cout << "result = (words.at(1) < words.at(2))" << endl;
-	cout << "result is " << result << endl;
-
-	result = (words.at(1) > words.at(2));
-	cout << "result = (words.at(1) > words.at(2))" << endl;
-	cout << "result is " << result << endl;
+//result = (words.at(1) == words.at(2));
+//cout << "result = (words.at(1) == words.at(2))" << endl;
+//cout << "result is " << result << endl;
+//
+//result = (words.at(1) < words.at(2));
+//cout << "result = (words.at(1) < words.at(2))" << endl;
+//cout << "result is " << result << endl;
+//
+//result = (words.at(1) > words.at(2));
+//cout << "result = (words.at(1) > words.at(2))" << endl;
+//cout << "result is " << result << endl;
 
 
 	words.resize(wordCnt);            //shrink vector to size used
 	fin.close();//done with the file
-		
+	cout << words.at(1).getCreatedCount() << endl;
+	cout << words.at(1).getCurrentCount() << endl;
 	// SORT
 	vector<JCString> sortedVec = vectorSort(words);
 	
 	// SAVE TO FILE	
-	//int wordsPerLine = 6;
-	//saveToFIle(sortedVec, OUTPUT_FILE, wordsPerLine);
+	int wordsPerLine = 6;
+	saveToFIle(sortedVec, OUTPUT_FILE, wordsPerLine);
 	
 	return 0;
 
@@ -81,8 +88,10 @@ int main()
 // A bubble sort variant uses JCString comparison method "lessThan"	
 vector<JCString> vectorSort(const vector<JCString> &wordVec)
 {
+	cout << "in SORT \n";
 	bool notDone;
 	int i = 0;
+	
 	vector<JCString> sortedVec = wordVec;
 
 	do {
@@ -90,13 +99,16 @@ vector<JCString> vectorSort(const vector<JCString> &wordVec)
 		for (i = 0; i < sortedVec.size()-1; i++) // up to the second to last elem 
 		{
 
-			//if the next one is less than it comes backwards
-			if ( !(sortedVec.at(i)==sortedVec.at(i+1)) )// i+1, will automaticaly check the last elem
+			//if the next one is less than it moves to the current one
+			//current one becomes the next
+			if (sortedVec.at(i) > sortedVec.at(static_cast<std::vector<JCString, std::allocator<JCString>>::size_type>(i) + 1))// i+1, will automaticaly check the last elem
 			{	
 				//swap the values
-				JCString holder = sortedVec.at(i);
-				sortedVec.at(i) = sortedVec.at(i + 1);
-				sortedVec.at(i + 1) = holder;
+				JCString holder = sortedVec.at(i); //hold the current one
+				sortedVec.at(i) = sortedVec.at(static_cast<std::vector<JCString, std::allocator<JCString>>::size_type>(i) + 1);
+				jcprint(holder);
+				cout << endl;
+				sortedVec.at(static_cast<std::vector<JCString, std::allocator<JCString>>::size_type>(i) + 1) = holder;// make current i the i + 1
 
 				notDone = true; 
 			}
@@ -106,9 +118,23 @@ vector<JCString> vectorSort(const vector<JCString> &wordVec)
 
 	return sortedVec;
 }
+void printJCstrVector(const vector<JCString>& wordvec)
+{
+	for (JCString str : wordvec)
+	{
+		jcprint(str);
+	}
+}
+void jcprint( JCString &jcstr)
+{
+	for(int i = 0; i < jcstr.length(); ++i)
+	{
+		cout << jcstr[i];
+	}
+}
 
 //saves a JCString vector to a file
-void saveToFIle(const vector<JCString> &wordVec, char* fileName, int wordPerLin)
+void saveToFIle(const vector<JCString> &wordVec, const char* fileName, int wordPerLin)
 {
 	ofstream outfile(fileName, ios::out); 
 	if (!outfile)

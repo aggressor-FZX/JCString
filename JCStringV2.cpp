@@ -23,72 +23,146 @@ int JCString::createdCount = 0;
 
 // initialzer with basic values
 // creates a char array with 20 memory
-JCString::JCString() {
-	this->cap = 20; //size of memory
+JCString::JCString() 
+{
+	this->cap = 7; //size of memory
 	this->end = 0;//index of the end of the string
-	this->str = new char[cap]; // creates the an array of size 20 chars
-	this->str[end] = '\0'; // terminates the char array
+	this->str = new char[cap]; // reserves memomory for 7 chars
+	this->charInitialize(this->cap);
+	this->str[end] = '\0'; // terminates the char array at 0
 
 	//keeping track of objects	
+	this->str_num = createdCount;
 	++currentCount;
 	++createdCount;
+
+	cout << "created a JCStrin with cap of " << cap << endl;
+	cout << " created " << currentCount << " JCstrings " << endl;
+	cout << " created ID " << this->str_num << endl;
 }
+
 // Destructor
 JCString::~JCString() 
 {
-	delete[] this->str;
-	//keeping track of objects	
-	--currentCount;
-}
-// construntor for dumping arrays
-JCString::JCString(const char* cstr) {
-
-	//while loop counts chars and stores int 
-	// will count until the value right before '\0'
-	while (cstr[this->end] != '\0')
+	if (this->str != nullptr)
 	{
-		++this->end;
+	
+		cout << "deleted this string " << this->str << endl;
+		cout << "ID " << this->str_num << endl;
+
+		//keeping track of objects	
+		--currentCount;
+		if (currentCount < 0) { cout << "less than zero current"; }
+		// Be free memory
+		delete[] this->str;
+		this->str = nullptr;
+	}
+	else {
+		cout << "double delete \n";
+	}
+}
+
+// constructor for dumping arrays
+JCString::JCString(const char* cstr) 
+{	
+	//while loop counts chars and stores int 
+	for (this->end = 0; cstr[this->end] != '\0'; ++this->end);
+		
+	if (this->cap+1 > this->end) 	//increases the cap
+	{
+
+		delete[] this->str;
+		this->cap = this->end + 7;
+		
+		
 	}
 
-	this->cap = 20;				// max size for now	
-	this->str = new char[cap]; // creates char arr a holding array
+	std::cout << "dump array cap " << this->cap << " word: " << cstr << endl;
+	
+	this->str = new char[this->cap]; // creates char arr a holding array
+	this->charInitialize(this->cap);
 
 	// fills a char array stores in the variable
-	for (int i = 0; i <= this->end; ++i) {
+	for (int i = 0; i < this->end; ++i) {
 		this->str[i] = cstr[i];
 	}
+	this->str[end] != '\0';
 
 	//keeping track of objects	
-	++currentCount;
+	this->str_num = createdCount;
 	++createdCount;
+	++currentCount;
 
 }
 // Copy constructor another JCString
 JCString::JCString(const JCString& jcstr) 
 {
-	this->cap = jcstr.cap; //size of memory
-	this->end = jcstr.end;//index of the end of the string
-	this->str = new char[jcstr.cap];
-	//Fills the array
-	for (int i = 0; jcstr.str[i] != '\0'; ++i)
+	this->cap = 7;
+	this->end = 0;
+	//index of the end of the string
+	std::cout << "copy constructor cap " << this->cap << " word: ";
+
+	for (int i = 0; i < jcstr.length(); i++)
 	{
-		this->str[i] = jcstr.str[i];
+		cout << jcstr[i];
+	}
+	std::cout << endl;
+
+	for (this->end = 0; jcstr.str[this->end] != '\0'; ++this->end) 
+	{
 	}
 
-	this->str[end] = '\0'; // terminates the char array
+	if (this->end+1 > cap) 	//increases the cap
+	{
+		std::cout << jcstr.str << " is big\n";
+		std::cout << " the cap is " << this->cap << endl;
+		this->cap = this->end + 7;
+		std::cout << "now the cap is " << this->cap << endl;
+		std::cout << "end is " << this->end << endl;
+		
+	}
+	this->str = new char[this->cap];
+	this->charInitialize(this->cap);
+
+	for (int i = 0; jcstr[i] != '\0'; i++)
+	{
+		this->str[i] = jcstr[i];
+	}
+	this->str[end] != '\0';
+	this->str_num = createdCount;
+	++createdCount;
+	++currentCount;
+}
+void JCString::charInitialize( const int capSize)
+{
+	//initializing all values with null. 
+	for (int i = 0; i < capSize; ++i)
+	{
+		this->str[i] = '\0';
+	}
+		//this makes sure we always have a null at the end
+		// avoids accessing un allocated memory one hopes
+		// adds the terminate char last char
+	this->str[end] != '\0';
+	
+	
 }
 
-int JCString::length() {
+int JCString::length() const 
+{
 	return this->end;
 }
 
-int JCString::capacity() {
+int JCString::capacity() const 
+{
 	return this->cap;
 }
 
 //returns individual letter at index argument
-char JCString::operator[](int &index) {
-	if (index >= 0 && index < end) {
+char JCString::operator[](int& index) const 
+{
+	
+	if (index >= 0 && index < this->end) {
 		return this->str[index];
 	}
 	else {
@@ -97,14 +171,13 @@ char JCString::operator[](int &index) {
 }
 
 // reads in the word with the extractor operator ">>"
-istream& JCString::operator>>(istream& inputStrm) {
+istream& JCString::operator>>(istream& inputStrm) 
+{
 	char inputWord[ 100 ];
 	if (inputStrm >> inputWord) {  
 		for (this->end = 0; inputWord[this->end] != '\0'; ++(this->end));//Loop counts letters finds end
-		// cap = ??;						
-		// TODO: needs to potentially grow for prog3
+		this->cap = this->end + 20;						
 		
-		//Loop constructs class' inner char array
 		for (int i = 0; i <= this->end; ++i) 
 		{
 			this->str[i] = inputWord[i];
@@ -114,13 +187,15 @@ istream& JCString::operator>>(istream& inputStrm) {
 }
 
 //write out char string to stream with insertion
-ostream& JCString::operator<<(ostream& outputStrm) {
+ostream& JCString::operator<<(ostream& outputStrm)  
+{
 
 	outputStrm << this->str;
 	return outputStrm;
 }
 
-bool JCString::operator<(const JCString& argStr) {
+bool JCString::operator<(const JCString& argStr) const 
+{
 	if (this->JCScompareTo(argStr) == -1)
 	{
 		return true;
@@ -129,7 +204,9 @@ bool JCString::operator<(const JCString& argStr) {
 	return false;			
 }
 
-bool JCString::operator>(const JCString& argStr) {
+//defined in terms of the string compare function
+bool JCString::operator>(const JCString& argStr) const 
+{
 	if (this->JCScompareTo(argStr) == 1)
 	{
 		return true;
@@ -138,8 +215,9 @@ bool JCString::operator>(const JCString& argStr) {
 	return false;			
 }
 
-bool JCString::operator==(const JCString& argStr) {
-
+//defined in terms of the string compare function
+bool JCString::operator==(const JCString& argStr) const 
+{
 	if (this->JCScompareTo(argStr) == 0)
 	{
 		return true;
@@ -147,10 +225,17 @@ bool JCString::operator==(const JCString& argStr) {
 	return false;			
 }
 
+// defined in terms of the == operator
+bool JCString::operator!=(const JCString& argStr) const 
+{
+	return !(this->operator==(argStr));
+}
+
+
 // compares char for char, returns 1 if this-> string is larger ascii value than argument jcstring
 // returns -1 if this-> string is lesser ascii value
 // returns 0 if this-> string is same ascii value
-int JCString::JCScompareTo(const JCString& angStr)
+int JCString::JCScompareTo(const JCString& angStr) const
 {
 	
 		int len = 0;
@@ -212,16 +297,25 @@ int JCString::JCScompareTo(const JCString& angStr)
 		return result;//return 0 if equal
 }
 
-JCString& JCString::operator=(const JCString& strToCopy) {
-	this->end = strToCopy.end;
-	this->cap = strToCopy.cap;
-						//TODO: needs to potentially grow for prog3
+JCString& JCString::operator=(const JCString& strToCopy) 
+{
+	std::cout << "= operator cap " << this->cap << " word: " << strToCopy.str << endl;
+	if(this != &strToCopy)
+	{ 
+		delete[] this->str;
+		this->end = strToCopy.end;
+		this->cap = this->end + 7;
+		this->str = new char[this->cap];
+		this->charInitialize(this->cap);
 
-	for (int i = 0; i <= end; ++i) {
-		this->str[i] = strToCopy.str[i];
+		for (int i = 0; i < end; ++i) 
+		{
+			this->str[i] = strToCopy.str[i];
+		}
 	}
 	return *this;
 }
+
 const char* JCString::c_str() {
 	return this->str;
 }
@@ -242,8 +336,6 @@ JCString JCString::returnLower() const
 {
 	JCString returnString(this->str);
 	returnString.makeLower();
-	++currentCount;
-	++createdCount;
 	return returnString;
 }
 // Static functions

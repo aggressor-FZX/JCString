@@ -28,8 +28,8 @@ public:
 	// Destructor
 	~JCString();
 
-	int length();
-	int capacity();
+	int length() const;
+	int capacity() const;
 
 	//Static Accessors
 	static int getCurrentCount();
@@ -38,14 +38,15 @@ public:
 	// Operators 
 	JCString& operator=(const JCString& strToCopy); // Copy assignment operator
 	//JCString& operator+(const JCString& strToCopy); // Appends another JCString 
-	char operator[](int& index);					// Index operator 
+	char operator[](int& index) const;					// Index operator 
 	istream& operator>>(istream& inputStrm);		// Read in using extractor
 	ostream& operator<<(ostream& inputStrm);		 // Write out using extractor
 
 	// Comparitor functions for use with like objects
-	bool operator<(const JCString& rhsJCString);	 // Less than operator
-	bool operator>(const JCString& rhsJCString);	 // Greater than operator
-	bool operator==(const JCString& rhsJCString);	 // Equal to than operator
+	bool operator<(const JCString& rhsJCString) const;	 // Less than operator
+	bool operator>(const JCString& rhsJCString) const;	 // Greater than operator
+	bool operator==(const JCString& rhsJCString) const;	 // Equal to than operator
+	bool operator!=(const JCString& rhsJCString) const;	 // Not equal to than operator
 
 	const char* c_str();
 
@@ -56,8 +57,9 @@ private:
 	char* str; // the array it is based off called str;
 	int end; // the index of the last char
 	int cap; // the max memory to use
-	int JCScompareTo(const JCString& angStr);
-
+	int JCScompareTo(const JCString& angStr) const;
+	void charInitialize(const int capSize);
+	long int str_num;//string's id num
 	// Static 
 	static int currentCount;
 	static int createdCount;
@@ -65,4 +67,5 @@ private:
 };
 
 #endif
+
 
