@@ -31,9 +31,10 @@ JCString::JCString()
 	this->charInitialize(this->cap);
 
 	//keeping track of objects	
-	this->str_num = createdCount;
 	++currentCount;
 	++createdCount;
+
+	this->str_num = createdCount;
 
 	cout << "created a JCStrin with cap of " << cap << endl;
 	cout << " created " << currentCount << " JCstrings " << endl;
@@ -71,6 +72,7 @@ JCString::JCString(const char* cstr)
 	this->str = new char[this->cap]; // reserves memomory for 7 chars
 	this->charInitialize(this->cap);
 	this->str[end] = '\0'; // terminates the char array at 0
+
 	//count dumped array elements
 	for (this->end = 0; cstr[this->end] != '\0'; ++this->end);
 		
@@ -184,15 +186,8 @@ istream& JCString::operator>>(istream& inputStrm)
 	char inputWord[ 100 ];
 	if (inputStrm >> inputWord) {  
 		for (this->end = 0; inputWord[this->end] != '\0'; ++(this->end));//Loop counts letters finds end
-		JCString CopiedStr(inputWord);//let the copy constructor reasize;
 
-		//now copy into existing object
-		*this = CopiedStr;
-
-		for (int i = 0; i <= this->end; ++i) 
-		{
-			this->str[i] = inputWord[i];
-		}
+		*this = inputWord; // Let copy assignment operator handle the resize 
 	}
 	return inputStrm;
 }
@@ -215,6 +210,68 @@ bool JCString::operator<(const JCString& argStr) const
 	return false;			
 }
 
+JCString& JCString::operator+(const JCString& rhsJCString)
+{
+	char* combinedStr = appendCstr(this->str, rhsJCString.str);
+	*this = combinedStr;//constructor for char arrays handles resize
+	return *this;
+
+}
+
+JCString& JCString::operator+(const char* rhsChars)
+{
+	char* combinedStr = appendCstr(this->str, rhsChars);
+	*this = combinedStr;//constructor for char arrays handles resize
+	return *this;
+
+}
+// Assignment to C_string
+JCString& JCString::operator=(const char*  strToCopy) 
+{
+	//clear old stuff
+	delete[] this->str;
+
+	std::cout << "= char +operator cap " << this->cap << " word: " << strToCopy << endl;
+	
+	int count = 0;
+	//count elements
+	for (count; strToCopy[count] != '\0'; ++count);
+ 
+	this->end = count;//set the size 
+	this->cap = this->end + 2; //increase cap
+	this->str = new char[this->cap]; //allocate memory
+	this->charInitialize(this->cap); //fills with nulls
+	//copy stuff
+	for (int i = 0; strToCopy[i] != '\0'; ++i)
+	{
+		this->str[i] = strToCopy[i];
+	}
+	
+	return *this;
+}
+// Assignment to JCSting 
+JCString& JCString::operator=(const JCString& strToCopy) 
+{
+	std::cout << "= operator cap " << this->cap << " word: " << strToCopy.str << endl;
+	if(this != &strToCopy)
+	{ 
+		delete[] this->str;
+		this->end = strToCopy.end;
+		this->cap = this->end + 2;
+		this->str = new char[this->cap];
+		this->charInitialize(this->cap);
+
+		for (int i = 0; strToCopy[i] != '\0'; ++i)
+		{
+			this->str[i] = strToCopy.str[i];
+		}
+	}
+	cout << "JCString =  " << this->str << endl;
+	cout << "end =  " << this->end << endl;
+	return *this;
+}
+
+//JCString& operator+=(const char* rhC_str) const;	  
 //defined in terms of the string compare function
 bool JCString::operator>(const JCString& argStr) const 
 {
@@ -308,24 +365,6 @@ int JCString::JCScompareTo(const JCString& angStr) const
 		return result;//return 0 if equal
 }
 
-JCString& JCString::operator=(const JCString& strToCopy) 
-{
-	std::cout << "= operator cap " << this->cap << " word: " << strToCopy.str << endl;
-	if(this != &strToCopy)
-	{ 
-		delete[] this->str;
-		this->end = strToCopy.end;
-		this->cap = this->end + 2;
-		this->str = new char[this->cap];
-		this->charInitialize(this->cap);
-
-		for (int i = 0; i < end; ++i) 
-		{
-			this->str[i] = strToCopy.str[i];
-		}
-	}
-	return *this;
-}
 
 const char* JCString::c_str() {
 	return this->str;
@@ -349,7 +388,31 @@ JCString JCString::returnLower() const
 	returnString.makeLower();
 	return returnString;
 }
-// Static functions
+
+// STATIC FUNCTIONS
+char* JCString::appendCstr(const char* str1, const char* str2)
+{	
+	int count1 = 0;
+	int count2 = 0;
+	//count elements
+	for (count1; str1[count1] != '\0'; ++count1);
+	for (count2; str2[count2] != '\0'; ++count2);
+
+	char* outChar = new char[count1 + count2 + 1] ;// space for null terminal
+	//fill new char []
+	for (int i = 0; str1[i] != '\0'; ++i)
+	{
+		outChar[i] = str1[i];
+	}
+	for (int i = 0; str2[i] != '\0'; ++i)
+	{
+		outChar[count1 + i] = str2[i];
+	}
+	outChar[count1 + count2] = '\0';//terminate with null
+
+	return outChar;
+}
+
 int JCString::getCurrentCount() 
 {
 	return currentCount;

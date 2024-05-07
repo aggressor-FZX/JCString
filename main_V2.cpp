@@ -53,21 +53,20 @@ int main()
 	}
 	
 	//TESTING
-	words.at(1) << cout << " vs " ;
-	words.at(2) << cout << endl;
-	//cout << words.at(1);
-	bool result = true;
-//result = (words.at(1) == words.at(2));
-//cout << "result = (words.at(1) == words.at(2))" << endl;
-//cout << "result is " << result << endl;
-//
-//result = (words.at(1) < words.at(2));
-//cout << "result = (words.at(1) < words.at(2))" << endl;
-//cout << "result is " << result << endl;
-//
-//result = (words.at(1) > words.at(2));
-//cout << "result = (words.at(1) > words.at(2))" << endl;
-//cout << "result is " << result << endl;
+	cout << words.at(1).c_str() << " vs " ;
+	cout << words.at(2).c_str() << endl;
+	JCString newString;
+	newString = words.at(1) + words.at(2);
+	cout << "result = words.at(1) + words.at(2)" << endl;
+	cout << newString.c_str()  << " is result " << endl;
+	char someWord[] = "this is big word";
+	JCString testString;
+	testString	=  testString + someWord;
+	cout << " JCString testString =  testString + someWord " << endl;
+	cout << testString.c_str() <<  " is testString " << endl;
+
+	//words.at(2) + words.at(1) << cout<< endl;
+	//words.at(4) + words.at(1) << cout<< endl;
 
 
 	words.resize(wordCnt);            //shrink vector to size used

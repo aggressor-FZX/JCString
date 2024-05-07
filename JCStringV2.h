@@ -19,39 +19,40 @@ using namespace std;
 class JCString 
 {     
 public:
-	JCString();						// default constructor
-	JCString(const char* cstr);		// cstring constructor for dumping array
+	JCString();						 // default constructor
+	JCString(const char* cstr);		 // cstring constructor for dumping array
 
-	// Copy constructor another JCString
-	JCString(const JCString &jcstr);
+	JCString(const JCString &jcstr); // Copy constructor another JCString
 
-	// Destructor
-	~JCString();
+	~JCString(); // Destructor
 
 	int length() const;
 	int capacity() const;
+	const char* c_str();
 
-	//Static Accessors
+	//STATIC ACCESSORS
 	static int getCurrentCount();
 	static int getCreatedCount();
 
-	// Operators 
-	JCString& operator=(const JCString& strToCopy); // Copy assignment operator
-	//JCString& operator+(const JCString& strToCopy); // Appends another JCString 
+	// OPERATORS 
+	JCString& operator=(const char* strToCopy);//copy assignment for string 
+	JCString& operator+(const JCString& rhsJCString); //adds another JCString object	
+	JCString& operator+(const char* rhsChars);		//adds more chars, adds char array
+	JCString& operator=(const JCString& strToCopy); // Copy assignment JCSstinrg operator
 	char operator[](int& index) const;					// Index operator 
 	istream& operator>>(istream& inputStrm);		// Read in using extractor
 	ostream& operator<<(ostream& inputStrm);		 // Write out using extractor
 
-	// Comparitor functions for use with like objects
+	// COMPARITOR FUNCTIONS FOR USE WITH LIKE OBJECTS
 	bool operator<(const JCString& rhsJCString) const;	 // Less than operator
 	bool operator>(const JCString& rhsJCString) const;	 // Greater than operator
 	bool operator==(const JCString& rhsJCString) const;	 // Equal to than operator
 	bool operator!=(const JCString& rhsJCString) const;	 // Not equal to than operator
 
-	const char* c_str();
 
+	// MUTATOR FUNCTIONS
+	 void makeLower(); // The JCString becomes all lowercase 
 	JCString returnLower() const; // returns a JCString copy in lowercase
-	void makeLower(); // The JCString becomes all lowercase 
 
 private:
 	char* str; // the array it is based off called str;
@@ -59,10 +60,14 @@ private:
 	int cap; // the max memory to use
 	int JCScompareTo(const JCString& angStr) const;
 	void charInitialize(const int capSize);
+	
 	long int str_num;//string's id num
-	// Static 
+
+	// STATIC FUNCTIONS
+	static char* appendCstr(const  char* str1, const char* str2); // Appends two cstrings
 	static int currentCount;
 	static int createdCount;
+	
 
 };
 
