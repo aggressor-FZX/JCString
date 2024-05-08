@@ -6,6 +6,8 @@
 // Description: HEADER FILE  Declerations 
 // Shows memeber functions of the JCString class 
 // Shows user how to use constructors and methods
+// Mutators change the object calling and return *this
+// as apposed to a new object.
 // 
 ////
 
@@ -19,12 +21,12 @@ using namespace std;
 class JCString 
 {     
 public:
-	JCString(int size = DEFAULT_CAP);						 // default constructor
+	JCString(int size = DEFAULT_CAP);// default constructor
 	JCString(const char* cstr);		 // cstring constructor for dumping array
 
 	JCString(const JCString &jcstr); // Copy constructor another JCString
 
-	~JCString(); // Destructor
+	~JCString();					// Destructor
 
 	int length() const;
 	int capacity() const;
@@ -35,14 +37,13 @@ public:
 	static int getCreatedCount();
 
 	// OPERATORS 
-	JCString operator+(const JCString& rhsJCString); //adds another JCString object	
-	JCString operator+(const char* rhsChars);		//adds more chars, adds char array
-	JCString& operator=(const char* strToCopy);//copy assignment for string 
-	JCString& operator=(const JCString& strToCopy); // Copy assignment JCSstinrg operator
+	JCString operator+(const JCString& rhsJCString) const;	//adds another JCString object	
+	JCString operator+(const char* rhsChars) const;			//adds more chars, adds char array
+	JCString& operator=(const char* strToCopy);				//Copy assignment for string 
+	JCString& operator=(const JCString& strToCopy);			// Copy assignment JCSstring operator
 	char operator[](const int index) const;					// Index operator 
-	//istream& operator>>(istream& inputStrm, JCString& jcstr);
-	friend istream& operator>>(istream& inputStrm, JCString& jcstr);// read in
-	friend ostream& operator<<(ostream& inputStrm, const JCString& jcstr);		 // Write out using extractor
+	friend istream& operator>>(istream& inputStrm, JCString& jcstr);			// read in
+	friend ostream& operator<<(ostream& inputStrm, const JCString& jcstr);		// Write out using operator
 
 	// COMPARITOR FUNCTIONS FOR USE WITH LIKE OBJECTS
 	bool operator<(const JCString& rhsJCString) const;	 // Less than operator
@@ -77,5 +78,4 @@ private:
 };
 
 #endif
-
 

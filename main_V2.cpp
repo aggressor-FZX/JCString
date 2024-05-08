@@ -4,12 +4,13 @@
 // Section: 33616 
 // Program JCString V2
 //
-// Description: This is a class that turns char arrays into a string class
-// called JCString. This programs reads in a file and creates JCStrings
-// from the text in the file. The JCStrings are stored in vector. 
+// Description: demonstration of a class that works like  the string class
+// This programs reads in a file and creates JCStrings
+// from the text in the file. Words are added using the "+" operator on 5 words
+// The  concatenated JCStrings are stored in vector then sorted using a bubble sort
 // A method of the JCString class is called  which compares itself
-// to other objects of the same class. This is used to alphabatize the 
-// vector of JCStrings. Then this is outputted to a file
+// to other objects of the same class. This is used to arrange objects  
+// in ascii number order. Then this is outputted to a file
 // NOTE: as of now Capitials Leter will always come before lower case
 // as ASCII numbers are used to compare
 ////
@@ -24,9 +25,9 @@ using namespace std;
 
 // GLOBAL VARIABLES
 const char INPUT_FILE[] = "infile3.txt";
-const char OUTPUT_FILE[] = "outfile5.txt";
-const int WORD_LENGTH = 5;
-const int WORDS_PER_LINE = 1;
+const char OUTPUT_FILE[] = "outfileV2.txt";
+const int WORD_LENGTH = 5; //words to concatenate per JCString
+const int WORDS_PER_LINE = 1; //JCStrings per output to file
 
 
 // Function prototypes 
@@ -47,45 +48,46 @@ int main()
 		exit(1);
 	}
 
-	// Loop reads in each words into JCString object iters thru jcstring vector
 
 	int wordCnt = 0;
 	JCString fileString;// single jcstring to read in file data
-	JCString pushString; //jcstring  to collect concatinated string
+	JCString pushString; //jcstring  to collect concatenated string
 	
-	do {
-		//if mult of 5 and jcstring has stuff
+	
+	// Loop reads in each words into JCString object iterates thru jcstring vector
+	 do
+	 {
+		//if multiple of 5 and jcstring is not empty 
 		if (wordCnt % WORD_LENGTH == 0 && pushString.c_str()[0] != '\0') 
 		{
 			//then push into vector
 			words.push_back(pushString);
+			//reset push string
 			pushString = "";
 		}
-		fileInput >> fileString;
-		pushString += fileString;
-		cout << "pushString: " << pushString << endl;
-		cout << "fileString: " << fileString << endl;
+		fileInput >> fileString; //collect word from stream to jcstring
+		pushString = pushString + fileString; //concatenate word to push string
 		
+		// If end of file, push back what ever is left
 		if (fileInput.eof())
 		{
 			words.push_back(pushString);
 		}
 		++wordCnt;
-	} while (!fileInput.eof());
+	 } while (!fileInput.eof());
+
+	// SORT VECTOR
 	vector<JCString> sortedVec = vectorSort(words);
 	
 	// SAVE TO FILE	
 	saveToFIle(sortedVec, OUTPUT_FILE, WORDS_PER_LINE);
-	cout << wordCnt << endl;
 	
 	return 0;
-
 }
 
 // A bubble sort variant uses JCString comparison method "lessThan"	
 vector<JCString> vectorSort(const vector<JCString> &wordVec)
 {
-	cout << "in SORT \n";
 	bool notDone;
 	int i = 0;
 	
@@ -101,11 +103,9 @@ vector<JCString> vectorSort(const vector<JCString> &wordVec)
 			if (sortedVec.at(i) > sortedVec.at(i + 1))// i+1, will automaticaly check the last elem
 			{	
 				//swap the values
-				JCString holder = sortedVec.at(i); //hold the current one
-				sortedVec.at(i) = sortedVec.at(i + 1);
-				jcprint(holder);
-				cout << endl;
-				sortedVec.at(i + 1) = holder;// make current i the i + 1
+				JCString holder = sortedVec.at(i); //hold the current string
+				sortedVec.at(i) = sortedVec.at(i + 1);// move the next one back in it's place 
+				sortedVec.at(i + 1) = holder;// then move up the current to take next's place (greater)
 
 				notDone = true; 
 			}
@@ -115,6 +115,8 @@ vector<JCString> vectorSort(const vector<JCString> &wordVec)
 
 	return sortedVec;
 }
+
+//function for testing and printing out the vector
 void printJCstrVector(const vector<JCString>& wordvec)
 {
 	for (JCString str : wordvec)
@@ -122,6 +124,8 @@ void printJCstrVector(const vector<JCString>& wordvec)
 		jcprint(str);
 	}
 }
+
+//function for testing and printing out JCStrings
 void jcprint( JCString &jcstr)
 {
 	for(int i = 0; i < jcstr.length(); ++i)
@@ -130,7 +134,7 @@ void jcprint( JCString &jcstr)
 	}
 }
 
-//saves a JCString vector to a file
+// Saves a JCString vector to a file
 void saveToFIle(const vector<JCString> &wordVec, const char* fileName, int wordPerLin)
 {
 	ofstream outfile(fileName, ios::out); 
@@ -154,9 +158,5 @@ void saveToFIle(const vector<JCString> &wordVec, const char* fileName, int wordP
 			outfile << endl;
 		}
 	}
-
 	outfile.close();
-
 }
-
-

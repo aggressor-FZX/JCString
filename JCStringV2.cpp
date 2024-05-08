@@ -4,11 +4,13 @@
 // Class Name: JCString
 // Program Name: JCString Class Implementation
 // 
-// Description: Constructor takes no args or entire char array
+// Description: Constructor takes optional one arg "size"
 // Member functions use comparisons between ASCII Values 
-// in the letters of the words in the JCString internal array
-// to sort, compare words and return weather arg word is 
-// greater or smaller. 
+// for operators <, >, ==, and their inverses.
+// Other operators add JCStrings or char* arrays
+// empty JCString are initialized with size number of '\0's
+// this class can compare words and return weather arg word is 
+// greater or smaller by ASCII value 
 ////
 
 #include "JCStringV2.h"
@@ -21,7 +23,7 @@ int JCString::currentCount = 0;
 int JCString::createdCount = 0;
 
 
-// initialzer with basic values
+// initializer with basic values
 // creates a char array with 7 memory
 JCString::JCString(int size) 
 {
@@ -37,26 +39,15 @@ JCString::JCString(int size)
 // Destructor
 JCString::~JCString() 
 {
-	if (currentCount < 0) 
-	{
-		cout << "less than zero current"; 
-	}
-
+	// if initialized clear old stuff
 	if (this->str != nullptr)
 	{
-	
-		cout << "deleted this string " << this->str << endl;
-		cout << "ID " << this->str_num << endl;
-
 		// Be free memory
 		delete[] this->str;
 		this->str = nullptr;
 
 		//keeping track of objects	
 		--currentCount;
-	}
-	else {
-		cout << "double delete \n";
 	}
 }
 
@@ -154,9 +145,8 @@ bool JCString::operator<(const JCString& argStr) const
 	return false;			
 }
 
-JCString JCString::operator+(const JCString& rhsJCString)
+JCString JCString::operator+(const JCString& rhsJCString) const
 {
-	cout << " adding JCString operator called \n";
 
 	// Temp jcstring gets deleted after assignment operator copies to left hand side var
 	JCString comboString = appendCstr(this->str, rhsJCString.str);// Calls char dump constructor
@@ -165,12 +155,11 @@ JCString JCString::operator+(const JCString& rhsJCString)
 
 }
 
-JCString JCString::operator+(const char* rhsChars)
+JCString JCString::operator+(const char* rhsChars) const
 {   
-	cout << " adding char* operator called\n";
 
 	// Temp jcstring gets deleted after assignment operator copies to left hand side var
-	JCString comboString = appendCstr(this->str, rhsChars);// concatinates then Calls char dump constructor
+	JCString comboString = appendCstr(this->str, rhsChars);// concatenates then Calls char dump constructor
 
 	return comboString;
 
@@ -239,7 +228,6 @@ void JCString::jcStrInitialize(const int capSize, const int end, const char* inS
 }
 JCString& JCString::operator+=(const JCString& rhsJCString)
 {
-	cout << " += operator called \n";
 
 	JCString comboString = appendCstr(this->str, rhsJCString.str);// Calls char dump constructor
 	*this = comboString;
@@ -357,6 +345,7 @@ void JCString::makeLower()
 }
 // returns an new instance of the JCString that is lower case
 JCString JCString::returnLower() const
+	
 {
 	JCString returnString(this->str);
 	returnString.makeLower();
