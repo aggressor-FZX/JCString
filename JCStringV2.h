@@ -19,7 +19,7 @@ using namespace std;
 class JCString 
 {     
 public:
-	JCString();						 // default constructor
+	JCString(int size = DEFAULT_CAP);						 // default constructor
 	JCString(const char* cstr);		 // cstring constructor for dumping array
 
 	JCString(const JCString &jcstr); // Copy constructor another JCString
@@ -35,11 +35,11 @@ public:
 	static int getCreatedCount();
 
 	// OPERATORS 
+	JCString operator+(const JCString& rhsJCString); //adds another JCString object	
+	JCString operator+(const char* rhsChars);		//adds more chars, adds char array
 	JCString& operator=(const char* strToCopy);//copy assignment for string 
-	JCString& operator+(const JCString& rhsJCString); //adds another JCString object	
-	JCString& operator+(const char* rhsChars);		//adds more chars, adds char array
 	JCString& operator=(const JCString& strToCopy); // Copy assignment JCSstinrg operator
-	char operator[](int& index) const;					// Index operator 
+	char operator[](const int index) const;					// Index operator 
 	istream& operator>>(istream& inputStrm);		// Read in using extractor
 	ostream& operator<<(ostream& inputStrm);		 // Write out using extractor
 
@@ -60,9 +60,12 @@ private:
 	int cap; // the max memory to use
 	int JCScompareTo(const JCString& angStr) const;
 	void charInitialize(const int capSize);
-	
+	void jcStrInitialize(const int capSize, const int end, const char* inString = nullptr);
+
 	long int str_num;//string's id num
 
+	// STATIC VARIABLES
+	static const int DEFAULT_CAP = 7; // Default size of the array
 	// STATIC FUNCTIONS
 	static char* appendCstr(const  char* str1, const char* str2); // Appends two cstrings
 	static int currentCount;

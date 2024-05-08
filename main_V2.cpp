@@ -65,8 +65,8 @@ int main()
 	cout << " JCString testString =  testString + someWord " << endl;
 	cout << testString.c_str() <<  " is testString " << endl;
 
-	//words.at(2) + words.at(1) << cout<< endl;
-	//words.at(4) + words.at(1) << cout<< endl;
+	words.at(2) + words.at(1) << cout<< endl;
+	words.at(4) + words.at(1) << cout<< endl;
 
 
 	words.resize(wordCnt);            //shrink vector to size used
