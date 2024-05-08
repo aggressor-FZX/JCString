@@ -123,22 +123,24 @@ char JCString::operator[](const int index) const
 }
 
 // reads in the word with the extractor operator ">>"
-istream& JCString::operator>>(istream& inputStrm) 
+ istream& operator>>(istream& inputStrm, JCString& jcstr) 
 {
 	char inputWord[ 100 ];
-	if (inputStrm >> inputWord) {  
-		for (this->end = 0; inputWord[this->end] != '\0'; ++(this->end));//Loop counts letters finds end
-
-		*this = inputWord; // Let copy assignment operator handle the resize 
+	if (inputStrm >> inputWord)
+	{ 
+		int numChars = 0;
+		for (numChars= 0; inputWord[numChars] != '\0'; ++numChars);//Loop counts letters finds end
+		
+		jcstr = inputWord; // Let copy assignment operator handle the resize 
 	}
 	return inputStrm;
 }
 
 //write out char string to stream with insertion
-ostream& JCString::operator<<(ostream& outputStrm)  
+ostream& operator<<(ostream& outputStrm, const JCString& jcstr)  
 {
 
-	outputStrm << this->str;
+	outputStrm << jcstr.str;
 	return outputStrm;
 }
 
@@ -235,8 +237,15 @@ void JCString::jcStrInitialize(const int capSize, const int end, const char* inS
 	}
 
 }
+JCString& JCString::operator+=(const JCString& rhsJCString)
+{
+	cout << " += operator called \n";
 
-//TO DO: JCString& operator+=(const char* rhC_str) const;	  
+	JCString comboString = appendCstr(this->str, rhsJCString.str);// Calls char dump constructor
+	*this = comboString;
+
+	return *this;
+}
 //defined in terms of the string compare function
 bool JCString::operator>(const JCString& argStr) const 
 {

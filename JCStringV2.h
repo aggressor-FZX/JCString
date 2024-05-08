@@ -40,8 +40,9 @@ public:
 	JCString& operator=(const char* strToCopy);//copy assignment for string 
 	JCString& operator=(const JCString& strToCopy); // Copy assignment JCSstinrg operator
 	char operator[](const int index) const;					// Index operator 
-	istream& operator>>(istream& inputStrm);		// Read in using extractor
-	ostream& operator<<(ostream& inputStrm);		 // Write out using extractor
+	//istream& operator>>(istream& inputStrm, JCString& jcstr);
+	friend istream& operator>>(istream& inputStrm, JCString& jcstr);// read in
+	friend ostream& operator<<(ostream& inputStrm, const JCString& jcstr);		 // Write out using extractor
 
 	// COMPARITOR FUNCTIONS FOR USE WITH LIKE OBJECTS
 	bool operator<(const JCString& rhsJCString) const;	 // Less than operator
@@ -51,9 +52,10 @@ public:
 
 
 	// MUTATOR FUNCTIONS
-	 void makeLower(); // The JCString becomes all lowercase 
-	JCString returnLower() const; // returns a JCString copy in lowercase
+	void makeLower(); // The JCString becomes all lowercase 
+	JCString& operator+=(const JCString& rhsJCString); //appends another JCString object	
 
+	JCString returnLower() const; // returns a JCString copy in lowercase
 private:
 	char* str; // the array it is based off called str;
 	int end; // the index of the last char

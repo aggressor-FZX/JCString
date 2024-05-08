@@ -23,8 +23,10 @@
 using namespace std;
 
 // GLOBAL VARIABLES
-const char INPUT_FILE[] = "infileTest.txt";
+const char INPUT_FILE[] = "infile3.txt";
 const char OUTPUT_FILE[] = "outfile5.txt";
+const int WORD_LENGTH = 5;
+const int WORDS_PER_LINE = 1;
 
 
 // Function prototypes 
@@ -36,49 +38,45 @@ void printJCstrVector(const vector<JCString>& wordvec);
 
 int main()
 { 
-	vector<JCString> words(100);
-	ifstream fin(INPUT_FILE);			
+	vector<JCString> words;
+	ifstream fileInput(INPUT_FILE);			
 
 	// READ FILE
-	if (fin.fail()) {
+	if (fileInput.fail()) {
 		cout << "ERROR READING FILE";
 		exit(1);
 	}
 
 	// Loop reads in each words into JCString object iters thru jcstring vector
+
 	int wordCnt = 0;
-	for (wordCnt; words[wordCnt] >> fin; ++wordCnt) 
-	{
-		// empty loop
-	}
+	JCString fileString;// single jcstring to read in file data
+	JCString pushString; //jcstring  to collect concatinated string
 	
-	//TESTING
-	cout << words.at(1).c_str() << " vs " ;
-	cout << words.at(2).c_str() << endl;
-	JCString newString;
-	newString = words.at(1) + words.at(2);
-	cout << "result = words.at(1) + words.at(2)" << endl;
-	cout << newString.c_str()  << " is result " << endl;
-	char someWord[] = "this is big word";
-	JCString testString;
-	testString	=  testString + someWord;
-	cout << " JCString testString =  testString + someWord " << endl;
-	cout << testString.c_str() <<  " is testString " << endl;
-
-	words.at(2) + words.at(1) << cout<< endl;
-	words.at(4) + words.at(1) << cout<< endl;
-
-
-	words.resize(wordCnt);            //shrink vector to size used
-	fin.close();//done with the file
-	cout << words.at(1).getCreatedCount() << endl;
-	cout << words.at(1).getCurrentCount() << endl;
-	// SORT
+	do {
+		//if mult of 5 and jcstring has stuff
+		if (wordCnt % WORD_LENGTH == 0 && pushString.c_str()[0] != '\0') 
+		{
+			//then push into vector
+			words.push_back(pushString);
+			pushString = "";
+		}
+		fileInput >> fileString;
+		pushString += fileString;
+		cout << "pushString: " << pushString << endl;
+		cout << "fileString: " << fileString << endl;
+		
+		if (fileInput.eof())
+		{
+			words.push_back(pushString);
+		}
+		++wordCnt;
+	} while (!fileInput.eof());
 	vector<JCString> sortedVec = vectorSort(words);
 	
 	// SAVE TO FILE	
-	int wordsPerLine = 6;
-	saveToFIle(sortedVec, OUTPUT_FILE, wordsPerLine);
+	saveToFIle(sortedVec, OUTPUT_FILE, WORDS_PER_LINE);
+	cout << wordCnt << endl;
 	
 	return 0;
 
@@ -100,14 +98,14 @@ vector<JCString> vectorSort(const vector<JCString> &wordVec)
 
 			//if the next one is less than it moves to the current one
 			//current one becomes the next
-			if (sortedVec.at(i) > sortedVec.at(static_cast<std::vector<JCString, std::allocator<JCString>>::size_type>(i) + 1))// i+1, will automaticaly check the last elem
+			if (sortedVec.at(i) > sortedVec.at(i + 1))// i+1, will automaticaly check the last elem
 			{	
 				//swap the values
 				JCString holder = sortedVec.at(i); //hold the current one
-				sortedVec.at(i) = sortedVec.at(static_cast<std::vector<JCString, std::allocator<JCString>>::size_type>(i) + 1);
+				sortedVec.at(i) = sortedVec.at(i + 1);
 				jcprint(holder);
 				cout << endl;
-				sortedVec.at(static_cast<std::vector<JCString, std::allocator<JCString>>::size_type>(i) + 1) = holder;// make current i the i + 1
+				sortedVec.at(i + 1) = holder;// make current i the i + 1
 
 				notDone = true; 
 			}
@@ -143,13 +141,10 @@ void saveToFIle(const vector<JCString> &wordVec, const char* fileName, int wordP
 
 	int line = 0;
 
-	for (JCString str : wordVec)
+	for (const JCString str : wordVec)
 	{
 		// left aligning and spaced 
-		outfile << left;
-		outfile << setw(13);
-
-		str << outfile ;
+		outfile << left << setw(13) << str << " " << str.length() << ":" << str.capacity();
 		
 		line++;
 
