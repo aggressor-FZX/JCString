@@ -42,7 +42,7 @@ public:
 	JCString& operator=(const char* strToCopy);				//Copy assignment for string 
 	JCString& operator=(const JCString& strToCopy);			// Copy assignment JCSstring operator
 	char operator[](const int index) const;					// Index operator 
-	friend istream& operator>>(istream& inputStrm, JCString& jcstr);			// read in
+	friend istream& operator>>(istream& inputStrm,  JCString& jcstr);			// read in
 	friend ostream& operator<<(ostream& inputStrm, const JCString& jcstr);		// Write out using operator
 
 	// COMPARITOR FUNCTIONS FOR USE WITH LIKE OBJECTS

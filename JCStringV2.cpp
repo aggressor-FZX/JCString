@@ -114,7 +114,7 @@ char JCString::operator[](const int index) const
 }
 
 // reads in the word with the extractor operator ">>"
- istream& operator>>(istream& inputStrm, JCString& jcstr) 
+ istream& operator>>(istream& inputStrm,  JCString& jcstr) 
 {
 	char inputWord[ 100 ];
 	if (inputStrm >> inputWord)
