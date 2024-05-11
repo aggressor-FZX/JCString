@@ -25,9 +25,9 @@ using namespace std;
 
 // GLOBAL VARIABLES
 const char INPUT_FILE[] = "infile3.txt";
-const char OUTPUT_FILE[] = "outfileV2.txt";
-const int WORD_LENGTH = 5; //words to concatenate per JCString
-const int WORDS_PER_LINE = 1; //JCStrings per output to file
+const char OUTPUT_FILE[] = "outfile_case.txt";
+const int WORD_LENGTH = 1; //words to concatenate per JCString
+const int WORDS_PER_LINE = 4; //JCStrings per output to file
 
 
 // Function prototypes 
@@ -148,7 +148,10 @@ void saveToFIle(const vector<JCString> &wordVec, const char* fileName, int wordP
 	for (const JCString str : wordVec)
 	{
 		// left aligning and spaced 
-		outfile << left << setw(13) << str << " " << str.length() << ":" << str.capacity();
+		// cout << str.c_str() << endl;
+		outfile << 
+			left << setw(13) << str << " " << str.length() << ":" << setw(10) 
+			<< str.capacity() ;
 		
 		line++;
 

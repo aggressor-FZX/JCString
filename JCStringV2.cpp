@@ -85,10 +85,10 @@ void JCString::charInitialize( const int capSize)
 	{
 		this->str[i] = '\0';
 	}
+
 	// This makes sure we always have a null at the end
-	this->str[end] != '\0';
-	
-	
+	this->str[end] = '\0';
+
 }
 
 int JCString::length() const 
@@ -265,71 +265,61 @@ bool JCString::operator!=(const JCString& argStr) const
 // compares char for char, returns 1 if this-> string is larger ascii value than argument jcstring
 // returns -1 if this-> string is lesser ascii value
 // returns 0 if this-> string is same ascii value
-int JCString::JCScompareTo(const JCString& angStr) const
+int JCString::JCScompareTo(const JCString& argStr) const
 {
 	
 		int len = 0;
-		int count = 0;
 		int result = 0;
 
-		// dummie char stirngs
-		JCString thisString(this->str);
+		// make lower case versions for comparison
+		JCString thisString = this->returnLower();// New lower case copy
 
-		// lower case logic for when we implement that later
-		// uncomment when ready
-		// TODO: write a method which makes this->str lowercase
-		//JCString str2 = angStr.returnLower();
-		//str1.makeLower();
+		JCString argString = argStr.returnLower(); // New Lower Case Copy
 
-		JCString str2(angStr.str);
 		// make sure we iter through to the shortest char string
-		if (thisString.length() < str2.length())
+		if (thisString.length() < argString.length())
 		{
 			len = thisString.length();
 		}
 		else
 		{
-			len = str2.length();
+			len = argString.length();
 		}
 		// compares char for char, returns 1 if this-> string is larger
-
-		while (count < len)
+		// Smaller numbers come first in the alphabet a = 97, b = 98 and so on
+		for(int count = 0; count < len ; ++count)
 		{
-			if(thisString.str[count] > str2.str[count])
+			if(thisString.str[count] > argString.str[count])
 			{
-				//str1 is greater or comes later return 1
+				//this String is greater or comes later return 1
 				result = 1;
-				count = len; // effectivly breaks
-
+				count = len; // break
 			}
-			else if (thisString.str[count] < str2.str[count])
+			else if (thisString.str[count] < argString.str[count])
 			{
 				result = -1;
-				count = len; // effectivly breaks
-			}
-			//then they must be the same char , if one is terminated here it comes first (is smaller)
-			// if the char arr is shorter than the other but equal otherwise
-			// the shorter one wins by defult
-			else if (thisString.str[count+1] == '\0')
+				count = len; // break
+			} //... else they must be the same char if the string.end is count+1 it is smaller by default 
+			else if (thisString.length() == count+1)
 			{
 				result = -1;	//compare string is larger 
 				count = len;
 				
 			}
-			else if (str2.str[count+1] == '\0')
+			else if (argString.length() == count+1)
 			{
-				result = 1;		//this string is larger, compare string comes first 
+				result = 1;		//this string is larger 
 				count = len;
 			}	
-
-			count++;
 		}
 		return result;//return 0 if equal
 }
 
 
-const char* JCString::c_str() {
-	return this->str;
+char* JCString::c_str() const 
+{
+	char* output = this->str;
+	return output;
 }
 
 //  modifies the JCString such that it is all lower case
@@ -344,8 +334,8 @@ void JCString::makeLower()
 	}
 }
 // returns an new instance of the JCString that is lower case
+// use as JCString newLowCaseString = oldLowCaseString.returnLower(); 
 JCString JCString::returnLower() const
-	
 {
 	JCString returnString(this->str);
 	returnString.makeLower();

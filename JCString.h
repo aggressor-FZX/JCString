@@ -39,7 +39,7 @@ public:
 	bool equals(const JCString& argStr);
 
 	void setEqualTo(const JCString& argStr);
-	const char* c_str();
+	char* c_str() const;
 
 	JCString returnLower() const; // returns a JCString copy in lowercase
 	void makeLower(); // The JCString becomes all lowercase 
